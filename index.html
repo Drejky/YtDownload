@@ -5,42 +5,23 @@
     <script type="text/javasript" src="dl.js"></script>		
 </head>
 <body>
-    <form>
-        <div>
-            <label>Enter name of mp3</label>
-            <input type="text" id="name" autofocus>
-        </div>
-        <div>
-            <label>Enter link</label>
-            <input type="text" id="link">
-        </div>
-        <button type="submit" id="dl">Download</button>
-    </form>
-    <input type="text" id="yee">
-    <button id="but">dsfdsfdsdsf</button>
+
+    <label>Enter name of mp3</label>
+    <input type="text" id="name" autofocus>
+
+    <label>Enter link</label>
+    <input type="text" id="link">
+
+    <button type="button" id="dl">Download</button>
+
     
     <script>window.$ = window.jQuery = require('jquery');</script>
     <script>
-        $(document).ready(()=>{        
-            $('#but').click(()=>{
-                console.log($('#yee').val());
-            });
-        });
-        /////////////////////////////
         const electron = require('electron');
-        const {ipcRenderer} = electron;
-
         const ytdl = require('ytdl-core');
         const fs = require('fs');
 
-        function doTheDownload(name, link){/*
-            const foo = ytdl(link, {
-                filter: "audioonly",
-                quality: "highest"
-            }).pipe(fs.createWriteStream(name+'.mp3')).on("progress", (event)=>{
-                console.log(123);
-            });*/
-
+        function doTheDownload(name, link){
             const foo = ytdl(link, {
                 filter: "audioonly",
                 quality: "highest"
@@ -62,23 +43,18 @@
                         console.log(foo);
                     }
                 });
-
-
-
-            })
-
-            
+            });            
         }
 
-        const form = document.querySelector('form');
-        form.addEventListener('submit', submitForm);
+        $(document).ready(()=>{
+            $('#dl').click(()=>{
+                let name = $('#name').val();
+                let link = $('#link').val();
+                doTheDownload(name, link);
+            });
+        });
 
-        function submitForm(e){
-            e.preventDefault();
-            const name = document.querySelector('#name').value;
-            const link = document.querySelector('#link').value;
-            doTheDownload(name, link);
-        }
+
     </script>
 </body>
 </html>
