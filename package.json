@@ -1,0 +1,16 @@
+{
+  "name": "electrontime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Drejky",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^7.1.9",
+    "jquery": "^3.4.1",
+    "ytdl": "^1.1.0"
+  }
+}
