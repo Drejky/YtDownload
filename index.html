@@ -13,13 +13,16 @@
     <input type="text" id="link">
 
     <button type="button" id="dl">Download</button>
+    <button type="button" id="browse">Browse</button>
 
     
     <script>window.$ = window.jQuery = require('jquery');</script>
     <script>
         const electron = require('electron');
+        const {dialog} = electron;
         const ytdl = require('ytdl-core');
         const fs = require('fs');
+        let path;
 
         function doTheDownload(name, link){
             const foo = ytdl(link, {
@@ -46,11 +49,21 @@
             });            
         }
 
+        function openBrowserWindow(){
+            dialog.showOpenDialog({properties:['openDirectory']}, (folderPath)=>{
+                console.log(folderPath);
+            });
+        }
+
         $(document).ready(()=>{
             $('#dl').click(()=>{
                 let name = $('#name').val();
                 let link = $('#link').val();
                 doTheDownload(name, link);
+            });
+            
+            $('#browse').click(()=>{
+                openBrowserWindow();
             });
         });
 

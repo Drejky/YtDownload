@@ -1,8 +1,9 @@
 const electron = require('electron');
 
-const {app, BrowserWindow, Menu, ipcMain} = electron;
+const {app, BrowserWindow, Menu, dialog} = electron;
 
 let mainWindow;
+let path;
 
 app.on('ready', () =>{
     mainWindow = new BrowserWindow({
@@ -19,20 +20,18 @@ app.on('ready', () =>{
     Menu.setApplicationMenu(mainMenu);
 });
 
-//Catch name:add and link:add
-ipcMain.on('name:add', (e, name) =>{
-    console.log(name)
-});
-
-ipcMain.on('link:add', (e, link) =>{
-    console.log(link)
-});
-
 //Menu tempelate
 const mainMenuTempelate = [
     {
         label:'File',
         submenu:[
+            {
+                label:'Choose file path',
+                click(){
+                    path = dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] });
+                    console.log(path);
+                }
+            },
             {
                 label: 'Quit',
                 accelerator: 'Ctrl+W',
