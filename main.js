@@ -26,13 +26,6 @@ const mainMenuTempelate = [
         label:'File',
         submenu:[
             {
-                label:'Choose file path',
-                click(){
-                    path = dialog.showOpenDialog({ properties: ['openFile', 'multiSelections'] });
-                    console.log(path);
-                }
-            },
-            {
                 label: 'Quit',
                 accelerator: 'Ctrl+W',
                 click(){
