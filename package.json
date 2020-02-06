@@ -9,6 +9,7 @@
   "author": "Drejky",
   "license": "MIT",
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "electron": "^7.1.9",
     "jquery": "^3.4.1",
     "ytdl": "^1.1.0"
