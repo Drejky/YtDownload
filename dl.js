@@ -2,15 +2,23 @@ const electron = require('electron');
 const {dialog} = electron.remote;
 const ytdl = require('ytdl-core');
 const fs = require('fs');
+const filenamify = require('filenamify');
 let path;
+
 window.$ = window.jQuery = require('jquery');
+
+function getName(link){
+    ytdl.getInfo(link, function(err, info) {
+        doTheDownload(filenamify(info.title), link);
+    });
+}
 
 function doTheDownload(name, link){
     const foo = ytdl(link, {
         filter: "audioonly",
         quality: "highest"
     });
-    
+
     if(path)
         foo.pipe(fs.createWriteStream(path[0]+'/'+name+'.mp3'));
     else    
@@ -26,7 +34,7 @@ function doTheDownload(name, link){
             +"</div>"
             +"<br>"
         );
-
+        
         res.on("data", (data)=> {
             let buffer = data.length;
             dataTotal += buffer;
@@ -52,7 +60,14 @@ $(document).ready(()=>{
     $('#dl').click(()=>{
         let name = $('#name').val();
         let link = $('#link').val();
-        doTheDownload(name, link);
+        if(!link)
+            alert("You didn't put in any links");
+        
+        if(!name){
+            getName(link);
+        }
+        else
+            doTheDownload(name, link);
     });
     
     $('#browse').click(()=>{
