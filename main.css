@@ -1,0 +1,17 @@
+  
+  .inner {
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .outter {
+    width: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 20px;
+
+  }

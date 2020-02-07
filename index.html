@@ -1,22 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Yay</title>
+    <title>No idea</title>
     	
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+
 </head>
 <body>
-
-    <label>Enter name of mp3</label>
-    <input type="text" id="name" autofocus>
-    <br>
-    <label>Enter link</label>
-    <input type="text" id="link">
-    <br>
-    <button type="button" id="dl">Download</button>
-    <button type="button" id="browse">Choose save destination</button>
-    <button type="button" id="txtdl">Choose .txt file to download from</button>
-    <br>
+<div class="outter">
+    <div class="inner">
+        <h5>No idea</h5>
+        <div class="md-form form">
+            <input type="text" id="name" class="form-control form-control" placeholder="File name" autofocus>
+        </div>
+        <br>
+        <div class="md-form form">
+            <input type="text" id="link" class="form-control form-control" placeholder="YT link">
+        </div>
+        <br>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button type="button" class="btn btn-outline-dark" id="browse">Choose destination</button>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button type="button" class="btn btn-outline-dark" id="dl" >Download</button>
+                <button type="button" class="btn btn-outline-dark" id="txtdl">Choose .txt </button>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="placeholder"></div>
 
     <script src="./dl.js"></script>	
