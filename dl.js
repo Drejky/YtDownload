@@ -3,7 +3,9 @@ const {dialog} = electron.remote;
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const filenamify = require('filenamify');
+
 let path;
+let downloads = [];
 
 window.$ = window.jQuery = require('jquery');
 
@@ -14,22 +16,28 @@ function getName(link){
 }
 
 function doTheDownload(name, link){
-    const foo = ytdl(link, {
+    let index;
+    let foo = ytdl(link, {
         filter: "audioonly",
         quality: "highest"
     });
 
+    downloads.push(foo);
+    index = downloads.indexOf(foo);
+    console.log(downloads);
+    console.log(index);
+
     if(path)
-        foo.pipe(fs.createWriteStream(path[0]+'/'+name+'.mp3'));
+        downloads[index].pipe(fs.createWriteStream(path[0]+'/'+name+'.mp3'));
     else    
-        foo.pipe(fs.createWriteStream(name+'.mp3'));
+        downloads[index].pipe(fs.createWriteStream(name+'.mp3'));
     
-    foo.on('response', (res) =>{
+    downloads[index].on('response', (res) =>{
         let totalSize = res.headers['content-length'];  
         let dataTotal = 0;
         $('.placeholder').append(
-            "<p id = \"nameRemove\">"+name+":</p>"
-            +"<div class=\"progress\" id=\"divRemove\">"
+            "<p id = \"nameRemove"+index+"\">"+name+":</p>"
+            +"<div class=\"progress\" id=\"divRemove"+index+"\">"
                 +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
             +"</div>"
             +"<br>"
@@ -43,10 +51,9 @@ function doTheDownload(name, link){
             $('#progBar').html(Math.ceil(percentage) + "%");
             
             if(percentage === 100){
-                delete foo;
-                $('#nameRemove').remove();
-                $('#divRemove').remove();
-                console.log(foo);
+                $('#nameRemove'+index).remove();
+                $('#divRemove'+index).remove();
+                downloads.splice(index, 1);
             }
         });
     });            
@@ -72,5 +79,15 @@ $(document).ready(()=>{
     
     $('#browse').click(()=>{
         openBrowserWindow();
+    });
+    
+    $('#txtdl').click(()=>{
+        let bar = dialog.showOpenDialogSync({properties:['openFile']});
+        let rawList = fs.readFileSync(bar[0], "utf-8");
+        let parsedList = rawList.split("\n");
+        parsedList.forEach((x)=>{
+            getName(x);
+        });
+        
     });
 });
