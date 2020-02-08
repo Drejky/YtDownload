@@ -7,8 +7,8 @@ let path;
 
 app.on('ready', () =>{
     mainWindow = new BrowserWindow({
-        width: 1200,
-        height: 600,
+        width: 1000,
+        height: 1000,
         title: 'pistonDownloadertmnotactuallytm',
         webPreferences: {
             nodeIntegration: true

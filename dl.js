@@ -40,7 +40,7 @@ function doTheDownload(name, link){
             +"<div class=\"progress\" id=\"divRemove"+index+"\">"
                 +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
             +"</div>"
-            +"<br>"
+            +"<br id = \"remBr"+index+"\">"
         );
         
         res.on("data", (data)=> {
@@ -53,6 +53,7 @@ function doTheDownload(name, link){
             if(percentage === 100){
                 $('#nameRemove'+index).remove();
                 $('#divRemove'+index).remove();
+                $('#remBr'+index).remove();
                 downloads.splice(index, 1);
             }
         });

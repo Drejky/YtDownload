@@ -15,3 +15,17 @@
     padding: 20px;
 
   }
+
+  
+
+.btn{
+  background-color: #bcf4f5;
+  border-color: #00abcd;
+  color: #00abcd;
+}
+
+.btn:hover{
+  background-color: #ed2891;
+  border-color: #fac9e3;
+  color: #fac9e3;
+}

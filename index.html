@@ -7,32 +7,36 @@
     <link rel="stylesheet" href="main.css">
 
 </head>
-<body>
-<div class="outter">
-    <div class="inner">
-        <h5>No idea</h5>
-        <div class="md-form form">
-            <input type="text" id="name" class="form-control form-control" placeholder="File name" autofocus>
-        </div>
-        <br>
-        <div class="md-form form">
-            <input type="text" id="link" class="form-control form-control" placeholder="YT link">
-        </div>
-        <br>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <button type="button" class="btn btn-outline-dark" id="browse">Choose destination</button>
+<body style="margin: 0; padding:0;">
+    <canvas id="canvas"></canvas>
+    <script src="canvas.js"></script>   
+
+    <div class="outter">
+        <div class="inner">
+            <h5 style="text-align: center; color: #00abcd;">No idea</h5>
+            <div class="md-form form">
+                <input type="text" id="name" class="form-control form-control" placeholder="File name">
             </div>
-        </div>
-        <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <button type="button" class="btn btn-outline-dark" id="dl" >Download</button>
-                <button type="button" class="btn btn-outline-dark" id="txtdl">Choose .txt </button>
+            <br>
+            <div class="md-form form">
+                <input type="text" id="link" class="form-control form-control" placeholder="YT link">
             </div>
+            <br>        
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-outline-light btn-info" id="browse">Choose destination</button>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <button type="button" class="btn btn-outline-light btn-info" id="dl" >Download</button>
+                    <button type="button" class="btn btn-outline-light btn-info" id="txtdl">Choose .txt </button>
+                </div>
+            </div> 
         </div>
+        <div class="placeholder"></div>
     </div>
-</div>
-    <div class="placeholder"></div>
+    
 
     <script src="./dl.js"></script>	
 
