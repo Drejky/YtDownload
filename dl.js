@@ -20,6 +20,7 @@ function doTheDownload(name, link){
     let index;
     let format;
     let foo;
+    openBar();
 
     if(toVid == false){
         foo = ytdl(link, {
@@ -66,6 +67,8 @@ function doTheDownload(name, link){
             if(percentage === 100){
                 $('#toRemove'+index).remove();
                 downloads.splice(index, 1);
+                if(downloads.length < 2)
+                    closeBar();
             }
         });
     });            
@@ -73,6 +76,16 @@ function doTheDownload(name, link){
 
 function openBrowserWindow(){
     path = dialog.showOpenDialogSync({properties:['openDirectory']});
+}
+
+function openBar(){
+    $('#sidebar').width(250);
+    //$('body').css('marginLeft', 250+'px');
+}
+
+function closeBar(){
+    $('#sidebar').width(0);
+    //$('body').css('marginLeft', 0+'px');
 }
 
 $(document).ready(()=>{
@@ -109,4 +122,5 @@ $(document).ready(()=>{
         else
             toVid = false;
     });
+
 });

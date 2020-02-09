@@ -1,24 +1,22 @@
   
-  .inner {
-    position: relative;
-    width: 60%;
-    margin: 0 auto;
-    padding: 20px;
-  }
+.inner {
+  position: relative;
+  width: 60%;
+  margin: 0 auto;
+  padding: 20px;
+}
   
-  .outter {
-    width: 521px;
-    transform: translate(-50%, -50%);
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    padding: 20px;
+.outter {
+  width: 521px;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  padding: 20px;
 
-  }
+}
 
-  
-
-.btn{
+.btn .btn:focus{
   background-color: #bcf4f5;
   border-color: #00abcd;
   color: #00abcd;
@@ -30,14 +28,20 @@
   color: #fac9e3;
 }
 
-.btn:focus{
-  background-color: #bcf4f5;
-  border-color: #00abcd;
-  color: #00abcd;
-}
-
-
-
 body {
   overflow: hidden;
+  transition: 0.5s;
+}
+
+#sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #BCF4F5;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
 }
