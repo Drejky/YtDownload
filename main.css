@@ -7,7 +7,7 @@
   }
   
   .outter {
-    width: 50%;
+    width: 521px;
     transform: translate(-50%, -50%);
     position: absolute;
     top: 50%;
@@ -28,4 +28,16 @@
   background-color: #ed2891;
   border-color: #fac9e3;
   color: #fac9e3;
+}
+
+.btn:focus{
+  background-color: #bcf4f5;
+  border-color: #00abcd;
+  color: #00abcd;
+}
+
+
+
+body {
+  overflow: hidden;
 }

@@ -5,6 +5,7 @@ const fs = require('fs');
 const filenamify = require('filenamify');
 
 let path;
+let toVid = false;
 let downloads = [];
 
 window.$ = window.jQuery = require('jquery');
@@ -17,30 +18,42 @@ function getName(link){
 
 function doTheDownload(name, link){
     let index;
-    let foo = ytdl(link, {
-        filter: "audioonly",
-        quality: "highest"
-    });
+    let format;
+    let foo;
+
+    if(toVid == false){
+        foo = ytdl(link, {
+            filter: "audioonly",
+            quality: "highestaudio"
+        });
+        format = '.mp3';
+    }
+    else if(toVid == true){
+        foo = ytdl(link, {
+            quality: "highest"
+        });
+        format = '.mp4';
+    }
 
     downloads.push(foo);
     index = downloads.indexOf(foo);
-    console.log(downloads);
-    console.log(index);
 
     if(path)
-        downloads[index].pipe(fs.createWriteStream(path[0]+'/'+name+'.mp3'));
+        downloads[index].pipe(fs.createWriteStream(path[0]+'/'+name+format));
     else    
-        downloads[index].pipe(fs.createWriteStream(name+'.mp3'));
+        downloads[index].pipe(fs.createWriteStream(name+format));
     
     downloads[index].on('response', (res) =>{
         let totalSize = res.headers['content-length'];  
         let dataTotal = 0;
         $('.placeholder').append(
-            "<p id = \"nameRemove"+index+"\">"+name+":</p>"
-            +"<div class=\"progress\" id=\"divRemove"+index+"\">"
-                +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
+            "<div id = \"toRemove"+index+"\">"
+                +"<p class = \"bg-info\">"+name+":</p>"
+                +"<div class=\"progress\">"
+                    +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
+                +"</div>"
+                +"<br>"
             +"</div>"
-            +"<br id = \"remBr"+index+"\">"
         );
         
         res.on("data", (data)=> {
@@ -51,9 +64,7 @@ function doTheDownload(name, link){
             $('#progBar').html(Math.ceil(percentage) + "%");
             
             if(percentage === 100){
-                $('#nameRemove'+index).remove();
-                $('#divRemove'+index).remove();
-                $('#remBr'+index).remove();
+                $('#toRemove'+index).remove();
                 downloads.splice(index, 1);
             }
         });
@@ -90,5 +101,12 @@ $(document).ready(()=>{
             getName(x);
         });
         
+    });
+
+    $('#toVideo').click(()=>{
+        if($('#toVideo').prop("checked") == true)
+            toVid = true;
+        else
+            toVid = false;
     });
 });

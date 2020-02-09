@@ -1,9 +1,8 @@
 const electron = require('electron');
 
-const {app, BrowserWindow, Menu, dialog} = electron;
+const {app, BrowserWindow, Menu} = electron;
 
 let mainWindow;
-let path;
 
 app.on('ready', () =>{
     mainWindow = new BrowserWindow({
