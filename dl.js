@@ -3,6 +3,9 @@ const {dialog} = electron.remote;
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const filenamify = require('filenamify');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 let path;
 let toVid = false;
@@ -18,74 +21,120 @@ function getName(link){
 
 function doTheDownload(name, link){
     let index;
-    let format;
     let foo;
     openBar();
+
+    const onResponse = (stream) => {
+        let totalSize = stream.headers['content-length'];  
+        let dataTotal = 0;
+        $('.placeholder').append(
+            "<div id = \"toRemove"+index+"\">"
+                +"<p style=\"color: #00abcd;\">"+name+":</p>"
+                +"<div class=\"progress\">"
+                    +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar"+ index +"\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
+                +"</div>"
+                +"<br>"
+            +"</div>"
+        );
+        
+        stream.on("data", (data)=> {
+            let buffer = data.length;
+            dataTotal += buffer;
+            let percentage = dataTotal/totalSize * 100;
+            $('#progBar'+index).width(percentage + '%');
+            $('#progBar'+index).html(Math.ceil(percentage) + "%");
+        });
+        
+        if(toVid == false){
+            stream.on("end", ()=>{
+                $('#toRemove'+index).remove();
+                downloads.splice(index, 1);
+                if($('.placeholder').is(':empty'))
+                    closeBar();
+            });
+        }
+    }
 
     if(toVid == false){
         foo = ytdl(link, {
             filter: "audioonly",
             quality: "highestaudio"
         });
-        format = '.mp3';
-    }
-    else if(toVid == true){
-        foo = ytdl(link, {
-            quality: "highest"
-        });
-        format = '.mp4';
-    }
-
-    downloads.push(foo);
-    index = downloads.indexOf(foo);
-
-    if(path)
-        downloads[index].pipe(fs.createWriteStream(path[0]+'/'+name+format));
-    else    
-        downloads[index].pipe(fs.createWriteStream(name+format));
     
-    downloads[index].on('response', (res) =>{
-        let totalSize = res.headers['content-length'];  
-        let dataTotal = 0;
-        $('.placeholder').append(
-            "<div id = \"toRemove"+index+"\">"
-                +"<p class = \"bg-info\">"+name+":</p>"
-                +"<div class=\"progress\">"
-                    +"<div class=\"progress-bar progress-bar-striped progress-bar-animated\" id=\"progBar\" role=\"progressbar\" style=\"width: 0%\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div>"
-                +"</div>"
-                +"<br>"
-            +"</div>"
-        );
+        downloads.push(foo);
+        index = downloads.indexOf(foo);
+
+        if(path)
+            downloads[index].pipe(fs.createWriteStream(path[0]+'/'+name+'.mp3'));
+        else    
+            downloads[index].pipe(fs.createWriteStream(name+'.mp3'));
         
-        res.on("data", (data)=> {
-            let buffer = data.length;
-            dataTotal += buffer;
-            let percentage = dataTotal/totalSize * 100;
-            $('#progBar').width(percentage + '%');
-            $('#progBar').html(Math.ceil(percentage) + "%");
-            
-            if(percentage === 100){
-                $('#toRemove'+index).remove();
-                downloads.splice(index, 1);
-                if(downloads.length < 2)
-                    closeBar();
-            }
+        downloads[index].on('response', onResponse); 
+    }
+    else{
+        let finalDir
+        foo = ytdl(link, {
+            quality: "highestaudio",
+            filter: format => format.container === 'mp4' && !format.qualityLabel
         });
-    });            
+    
+        downloads.push(foo);
+        index = downloads.indexOf(foo);
+
+        if(path)
+            finalDir = path[0] + '/' + name + '.mp4';
+        else    
+            finalDir = __dirname + '/' + name + '.mp4';
+
+        downloads[index].pipe(fs.createWriteStream('specialSoundPlaceholder.mp4'));
+        downloads[index].on('response', onResponse);  
+        downloads[index].on('finish', ()=>{
+            const video = ytdl(link, {
+                quality: "highestvideo",
+                filter: format => format.container === 'mp4' && !format.audioEncoding    
+            });
+            video.on('response', (stream)=>{
+                let totalSize = stream.headers['content-length'];  
+                let dataTotal = 0;
+                $('#progBar'+index).addClass("bg-success");
+                stream.on("data", (data)=>{
+                    let buffer = data.length;
+                    dataTotal += buffer;
+                    let percentage = dataTotal/totalSize * 100;
+                    $('#progBar'+index).width(percentage + '%');
+                    $('#progBar'+index).html(Math.ceil(percentage) + "%");
+                })
+            });
+            ffmpeg()
+                .input(video)
+                .videoCodec('copy')
+                .input(__dirname + '/specialSoundPlaceholder.mp4')
+                .audioCodec('copy')
+                .save(finalDir)
+                .on('error', console.error)
+                .on('end', ()=>{
+                    fs.unlink(__dirname + '/specialSoundPlaceholder.mp4', err =>{
+                        if(err) console.error(err);
+                        else {
+                            $('#toRemove'+index).remove();
+                            downloads.splice(index, 1);
+                            if($('.placeholder').is(':empty'))
+                                closeBar(); 
+                        }
+                    });
+                });
+        });   
+    }       
 }
 
-function openBrowserWindow(){
-    path = dialog.showOpenDialogSync({properties:['openDirectory']});
-}
+
 
 function openBar(){
     $('#sidebar').width(250);
-    //$('body').css('marginLeft', 250+'px');
 }
 
 function closeBar(){
     $('#sidebar').width(0);
-    //$('body').css('marginLeft', 0+'px');
 }
 
 $(document).ready(()=>{
@@ -103,7 +152,7 @@ $(document).ready(()=>{
     });
     
     $('#browse').click(()=>{
-        openBrowserWindow();
+        path = dialog.showOpenDialogSync({properties:['openDirectory']});
     });
     
     $('#txtdl').click(()=>{
