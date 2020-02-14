@@ -1,11 +1,16 @@
 const electron = require('electron');
+const lePath = require('path');
 const {dialog} = electron.remote;
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const filenamify = require('filenamify');
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpegPath = (lePath.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' ))//.replace('app.asar', 'app.asar.unpacked');
+//const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
 const ffmpeg = require('fluent-ffmpeg');
-ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfmpegPath(ffmpegPath)
+
+
+module.exports = ffmpeg;
 
 let path;
 let toVid = false;
@@ -86,7 +91,7 @@ function doTheDownload(name, link){
         else    
             finalDir = __dirname + '/' + name + '.mp4';
 
-        downloads[index].pipe(fs.createWriteStream('specialSoundPlaceholder.mp4'));
+        downloads[index].pipe(fs.createWriteStream('specialSoundPlaceholder'+index+'.mp4'));
         downloads[index].on('response', onResponse);  
         downloads[index].on('finish', ()=>{
             const video = ytdl(link, {
@@ -108,12 +113,12 @@ function doTheDownload(name, link){
             ffmpeg()
                 .input(video)
                 .videoCodec('copy')
-                .input(__dirname + '/specialSoundPlaceholder.mp4')
+                .input('specialSoundPlaceholder'+index+'.mp4')
                 .audioCodec('copy')
                 .save(finalDir)
                 .on('error', console.error)
                 .on('end', ()=>{
-                    fs.unlink(__dirname + '/specialSoundPlaceholder.mp4', err =>{
+                    fs.unlink('specialSoundPlaceholder'+index+'.mp4', err =>{
                         if(err) console.error(err);
                         else {
                             $('#toRemove'+index).remove();
