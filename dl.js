@@ -5,7 +5,6 @@ const ytdl = require('ytdl-core');
 const fs = require('fs');
 const filenamify = require('filenamify');
 const ffmpegPath = (lePath.join(__dirname, '\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe' ))//.replace('app.asar', 'app.asar.unpacked');
-//const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath)
 
