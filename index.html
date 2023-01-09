@@ -1,52 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>No idea</title>
-    	
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="main.css">
-</head>
-<body style="margin: 0; padding:0;">
+  <head>
+    <title>Whirlwind downloader</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Changa&family=Pacifico"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body style="margin: 0; padding: 0">
     <canvas id="canvas"></canvas>
-    <script src="canvas.js"></script>   
 
-    <div class="outter">
-        <div class="inner">
-            <h5 style="text-align: center; color: #00abcd;">No idea</h5>
-            <div class="md-form form">
-                <input type="text" id="name" class="form-control form-control" placeholder="File name (optional)">
-            </div>
-            <br>
-            <div class="md-form form">
-                <input type="text" id="link" class="form-control form-control" placeholder="YT link">
-            </div>
-            <br>        
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button type="button" class="btn btn-outline-light btn-info" id="browse">Choose path</button>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <button type="button" class="btn btn-outline-light btn-info" id="dl" >Download</button>
-                    <button type="button" class="btn btn-outline-light btn-info" id="txtdl">Choose .txt </button>
-                </div>
-            </div> 
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="toVideo">
-                <label class="custom-control-label" style="color: #00abcd;" for="toVideo">Download video</label>
-            </div>
+    <div class="form">
+      <div class="title">
+        <h1>Drejkys</h1>
+        <h1>whirlwind</h1>
+      </div>
+      <input type="text" id="link" placeholder="Youtube link" />
+      <input type="text" id="name" placeholder="File name (optional)" />
+      <div class="pathWrapper">
+        <div class="browseButton"></div>
+        <div class="pathButton" id="browse">
+          <p id="currentPath">C:\Users\peter\Desktop\Repositories</p>
         </div>
-        
+      </div>
+      <div>
+        <input type="checkbox" id="toVideo" />
+        <label style="color: #00abcd" for="toVideo">Download video</label>
+      </div>
+      <div class="buttons">
+        <!-- <input type="file" /> -->
+        <button class="button" type="button" id="dl">Download</button>
+        <!-- <button class="button" type="button" id="txtdl">Choose .txt</button> -->
+      </div>
+      <p></p>
+      <p></p>
     </div>
+    <div id="sidebar"></div>
 
-
-    <div id="sidebar">
-        <div class="placeholder"></div>
-    </div>
-    
-
-    <script src="./dl.js"></script>	
-
-</body>
+    <script src="canvas.js"></script>
+    <script src="./dl.js"></script>
+  </body>
 </html>

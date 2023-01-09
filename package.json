@@ -5,19 +5,26 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . BigBrainDownloader --overwrite --asar-unpack --platform=win32 --arch=ia32 --icon=icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"DrejkysDownloader\""   
+    "package": "electron-packager . BigBrainDownloader --overwrite --asar-unpack --platform=win32 --arch=ia32 --icon=icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"DrejkysDownloader\"",
+    "prettier:write": "prettier --write --ignore-unknown .",
+    "prettier:check": "prettier --check --ignore-unknown .",
+    "test:lint": "eslint src --ext .js,.ts",
+    "test:lint:fix": "eslint src --fix --ext .js,.ts,.jsx,.tsx",
+    "test": "node test.js"
   },
   "author": "Drejky",
   "license": "MIT",
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "bootstrap": "^4.4.1",
-    "electron": "^7.1.9",
+    "electron": "^22.0.0",
+    "eslint": "^8.31.0",
     "ffmpeg": "0.0.4",
     "filenamify": "^4.1.0",
     "fluent-ffmpeg": "^2.1.2",
     "jquery": "^3.4.1",
-    "ytdl": "^1.1.0"
+    "prettier": "^2.8.1",
+    "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
     "electron-packager": "^14.2.0"
