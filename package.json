@@ -1,6 +1,6 @@
 {
-  "name": "electrontime",
-  "version": "1.0.0",
+  "name": "drejkyswhirlwind",
+  "version": "2.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -17,7 +17,6 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "bootstrap": "^4.4.1",
-    "electron": "^22.0.0",
     "eslint": "^8.31.0",
     "ffmpeg": "0.0.4",
     "filenamify": "^4.1.0",
@@ -27,6 +26,7 @@
     "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
+    "electron": "^22.0.0",
     "electron-packager": "^14.2.0"
   }
 }

@@ -2,7 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const fs = require("fs");
 
 app.whenReady().then(() => {
-  let settings = JSON.parse(fs.readFileSync("./settings.json"));
+  let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json"));
   const mainWindow = new BrowserWindow({
     x: settings.x,
     y: settings.y,
@@ -21,7 +21,7 @@ app.whenReady().then(() => {
     settings.windowY = newBounds.y;
     settings.windowWidth = newBounds.width;
     settings.windowHeight = newBounds.height;
-    fs.writeFileSync("./settings.json", JSON.stringify(settings));
+    fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings));
   };
   mainWindow.loadFile("index.html");
   mainWindow.on("resized", setNewSettings);
