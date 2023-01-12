@@ -8,12 +8,17 @@ const ffmpegPath = lePath.join(
   "\\node_modules\\@ffmpeg-installer\\win32-x64\\ffmpeg.exe"
 ); //.replace('app.asar', 'app.asar.unpacked');
 const ffmpeg = require("fluent-ffmpeg");
-const { data } = require("jquery");
+const os = require("os");
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 module.exports = ffmpeg;
 
 let settings = JSON.parse(fs.readFileSync(__dirname + "/settings.json"));
+//First time boot check
+if (settings.path === "none") {
+  settings.path = `C:/users/${os.userInfo().username}/Downloads`;
+  fs.writeFileSync(__dirname + "/settings.json", JSON.stringify(settings));
+}
 let path = settings.path;
 let toVid = false;
 let downloads = [];
@@ -23,7 +28,7 @@ $("#currentPath").html(path);
 
 const onResponse = (stream, name) => {
   const index = downloads.length - 1;
-  let totalSize = stream.headers["content-length"];
+  const totalSize = stream.headers["content-length"];
   let dataTotal = 0;
   $("#sidebar").append(
     `    <div id="toRemove${index}" class="dwCard">
@@ -58,17 +63,19 @@ const onResponse = (stream, name) => {
 };
 
 const download = (link) => {
+  const audioOptions = {
+    filter: "audioonly",
+    quality: "140",
+  };
   ytdl.getInfo(link).then((info) => {
     //Get name for the file
     let name = $("#name").val();
     if (!$("#name").val()) name = filenamify(info.videoDetails.title);
-    console.log("test1");
     //Get extention for the file
-    const audioExtention = ytdl.chooseFormat(info.formats, {
-      filter: "audioonly",
-      quality: "140",
-    }).container;
-    console.log("test2");
+    const audioExtention = ytdl.chooseFormat(
+      info.formats,
+      audioOptions
+    ).container;
 
     const videoExtention = ytdl.chooseFormat(info.formats, {
       quality: "highestvideo",
@@ -78,19 +85,27 @@ const download = (link) => {
 
     //Start audio download from youtube
     const audioStream = ytdl
-      .downloadFromInfo(info, {
-        filter: "audioonly",
-        quality: "140",
-      })
+      .downloadFromInfo(info, audioOptions)
       .on("response", (stream) => {
-        onResponse(stream, info.videoDetails.title);
+        onResponse(stream, name);
       });
 
     //No video download
     if (toVid === false) {
-      audioStream.pipe(
-        fs.createWriteStream(path + "/" + name + "." + audioExtention)
-      );
+      // audioStream.pipe(
+      //   fs.createWriteStream(path + "/" + name + "." + audioExtention)
+      // );
+      ffmpeg()
+        .input(audioStream)
+        .toFormat("mp3")
+        .on("error", (err) => {
+          console.log("An error occurred: " + err.message);
+        })
+        .on("progress", (progress) => {
+          // console.log(JSON.stringify(progress));
+          console.log("Processing: " + progress.targetSize + " KB converted");
+        })
+        .save(path + "/" + name + ".mp3");
     }
     //Video download
     else {
@@ -159,8 +174,9 @@ $("#browse").on("click", () => {
   ipcRenderer.send("request-path");
 });
 
-$("#txtdl").on("click", () => {
-  let rawList = fs.readFileSync(bar[0], "utf-8");
+$("#dlMassButton").on("click", () => {
+  let rawList = $(".massInput").val();
+  $(".massInput").val("");
   let parsedList = rawList.split("\n");
   parsedList.forEach((x) => {
     download(x);
@@ -170,6 +186,16 @@ $("#txtdl").on("click", () => {
 $("#toVideo").on("click", () => {
   if ($("#toVideo").prop("checked") == true) toVid = true;
   else toVid = false;
+});
+
+$("#showMore").on("click", () => {
+  if ($(".massDownload").hasClass("begone")) {
+    $(".massDownload").removeClass("begone");
+    $("#showMore").html("less");
+  } else {
+    $(".massDownload").addClass("begone");
+    $("#showMore").html("more");
+  }
 });
 
 ipcRenderer.on("path-selected", (event, sentPath) => {

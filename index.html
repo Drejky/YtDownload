@@ -20,30 +20,40 @@
   <body style="margin: 0; padding: 0">
     <canvas id="canvas"></canvas>
 
-    <div class="form">
-      <div class="title">
-        <h1>Drejkys</h1>
-        <h1>whirlwind</h1>
-      </div>
-      <input type="text" id="link" placeholder="Youtube link" />
-      <input type="text" id="name" placeholder="File name (optional)" />
-      <div class="pathWrapper">
-        <div class="browseButton"></div>
-        <div class="pathButton" id="browse">
-          <p id="currentPath">C:\Users\peter\Desktop\Repositories</p>
+    <div class="core">
+      <div class="form">
+        <div class="title">
+          <h1>Drejkys</h1>
+          <h1>whirlwind</h1>
+        </div>
+        <input type="text" id="link" placeholder="Youtube link" />
+        <input type="text" id="name" placeholder="File name (optional)" />
+        <div class="pathWrapper">
+          <div class="browseButton"></div>
+          <div class="pathButton" id="browse">
+            <p id="currentPath">C:\Users\peter\Desktop\Repositories</p>
+          </div>
+        </div>
+        <div>
+          <input type="checkbox" id="toVideo" />
+          <label style="color: #00abcd" for="toVideo">Include video</label>
+        </div>
+        <div class="buttons">
+          <!-- <input type="file" /> -->
+          <button class="button" type="button" id="dl">Download</button>
+          <button class="button" type="button" id="showMore">more</button>
+          <!-- <button class="button" type="button" id="txtdl">Choose .txt</button> -->
         </div>
       </div>
-      <div>
-        <input type="checkbox" id="toVideo" />
-        <label style="color: #00abcd" for="toVideo">Download video</label>
+      <div class="massDownload begone">
+        <textarea
+          placeholder="
+        https://youtu.be/123
+        https://youtu.be/abc"
+          class="massInput"
+        ></textarea>
+        <button class="button dlMass" id="dlMassButton">Download all</button>
       </div>
-      <div class="buttons">
-        <!-- <input type="file" /> -->
-        <button class="button" type="button" id="dl">Download</button>
-        <!-- <button class="button" type="button" id="txtdl">Choose .txt</button> -->
-      </div>
-      <p></p>
-      <p></p>
     </div>
     <div id="sidebar"></div>
   </body>

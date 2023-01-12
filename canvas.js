@@ -41,17 +41,6 @@ class ball {
   }
 }
 
-for (let i = 0; i < 1000; i++) {
-  let buffer = new ball(
-    Math.random() * Math.PI * 2,
-    1,
-    `rgb(${Math.random() * 255},${Math.random() * 255},255)`,
-    250 + Math.random() * Math.max(canvas.width, canvas.height),
-    0.0005 + Math.random() / 200
-  );
-  balls.push(buffer);
-}
-
 function animate() {
   requestAnimationFrame(animate);
 
@@ -64,4 +53,16 @@ function animate() {
     ball.draw();
   });
 }
+
+for (let i = 0; i < 1000; i++) {
+  let buffer = new ball(
+    Math.random() * Math.PI * 2,
+    1,
+    `rgb(${Math.random() * 255},${Math.random() * 255},255)`,
+    250 + Math.random() * Math.max(canvas.width, canvas.height),
+    0.0005 + Math.random() / 200
+  );
+  balls.push(buffer);
+}
+
 animate();
