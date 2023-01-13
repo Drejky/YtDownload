@@ -1,6 +1,6 @@
 {
   "name": "drejkyswhirlwind",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "prettier:check": "prettier --check --ignore-unknown .",
     "test:lint": "eslint src --ext .js,.ts",
     "test:lint:fix": "eslint src --fix --ext .js,.ts,.jsx,.tsx",
-    "test": "node test.js"
+    "test": "node test.js",
+    "package2": "electron-packager . Drejkys-Whirlwind --platform=win32 --arch=x64 --icon=icon.ico --prune=true"
   },
   "author": "Drejky",
   "license": "MIT",

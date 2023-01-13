@@ -131,7 +131,7 @@ textarea {
   );
   padding: 0.5rem;
   margin-top: 1rem;
-  transition: 1000ms;
+  transition: 0.5s;
 }
 .cardTitle {
   font-family: Changa;

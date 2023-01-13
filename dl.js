@@ -26,51 +26,18 @@ let downloads = [];
 window.$ = window.jQuery = require("jquery");
 $("#currentPath").html(path);
 
-const onResponse = (stream, name) => {
-  const index = downloads.length - 1;
-  const totalSize = stream.headers["content-length"];
-  let dataTotal = 0;
-  $("#sidebar").append(
-    `    <div id="toRemove${index}" class="dwCard">
-    <p class="cardTitle">${name}</p>
-    <div class="progress">
-      <div
-        class="progress-bar progress-bar-animated"
-        id="progBar${index}"
-        role="progressbar"
-        style="width: 0%"
-      >
-      </div>
-    </div>
-  </div>`
-  );
-
-  //Every time piece of data is downloaded, calculate percentage progress
-  stream.on("data", (data) => {
-    const buffer = data.length;
-    dataTotal += buffer;
-    const percentage = (dataTotal / totalSize) * 100;
-    $("#progBar" + index).width(percentage + "%");
-    $("#progBar" + index).html(Math.ceil(percentage) + "%");
-  });
-
-  if (toVid == false) {
-    stream.on("end", () => {
-      $("#toRemove" + index).remove();
-      downloads.splice(index, 1);
-    });
-  }
-};
-
 const download = (link) => {
   const audioOptions = {
     filter: "audioonly",
     quality: "140",
   };
+
   ytdl.getInfo(link).then((info) => {
     //Get name for the file
     let name = $("#name").val();
     if (!$("#name").val()) name = filenamify(info.videoDetails.title);
+    const index = downloads.length;
+
     //Get extention for the file
     const audioExtention = ytdl.chooseFormat(
       info.formats,
@@ -81,36 +48,50 @@ const download = (link) => {
       quality: "highestvideo",
       filter: (format) => format.container === "mp4" && !format.audioEncoding,
     }).container;
-    console.log(videoExtention);
 
     //Start audio download from youtube
     const audioStream = ytdl
       .downloadFromInfo(info, audioOptions)
-      .on("response", (stream) => {
-        onResponse(stream, name);
+      .on("progress", (chLen, data, total) => {
+        //Every time piece of data is downloaded, calculate percentage progress
+        const percentage = (data / total) * 100;
+        $("#progBar" + index).width(percentage + "%");
+        $("#progBar" + index).html(Math.ceil(percentage) + "%");
       });
+
+    //Add a popup with download
+    //Has to be here because there is multiple response events now
+    $("#sidebar").append(
+      `    <div id="toRemove${index}" class="dwCard">
+        <p class="cardTitle">${name}</p>
+        <div class="progress">
+          <div
+            class="progress-bar progress-bar-animated"
+            id="progBar${index}"
+            role="progressbar"
+            style="width: 0%"
+          >
+          </div>
+        </div>
+      </div>`
+    );
+
+    //Push the downloaded into a list of downloads
+    downloads.push(audioStream);
 
     //No video download
     if (toVid === false) {
-      // audioStream.pipe(
-      //   fs.createWriteStream(path + "/" + name + "." + audioExtention)
-      // );
       ffmpeg()
-        .input(audioStream)
+        .input(downloads[index])
         .toFormat("mp3")
         .on("error", (err) => {
           console.log("An error occurred: " + err.message);
-        })
-        .on("progress", (progress) => {
-          // console.log(JSON.stringify(progress));
-          console.log("Processing: " + progress.targetSize + " KB converted");
         })
         .save(path + "/" + name + ".mp3");
     }
     //Video download
     else {
-      const index = downloads.length;
-      audioStream
+      downloads[index]
         .pipe(
           fs.createWriteStream(
             "specialSoundPlaceholder" + index + "." + audioExtention
@@ -119,19 +100,13 @@ const download = (link) => {
         .on("finish", () => {
           const video = ytdl(link, {
             quality: "highestvideo",
-            // filter: (format) =>
-            //   format.container === "mp4" && !format.audioEncoding,
           });
-          video.on("response", (stream) => {
-            const totalSize = stream.headers["content-length"];
-            let dataTotal = 0;
+          video.on("progress", (chlen, data, total) => {
             $("#progBar" + index).addClass("bg-success");
-            stream.on("data", (data) => {
-              dataTotal += data.length;
-              const percentage = (dataTotal / totalSize) * 100;
-              $("#progBar" + index).width(percentage + "%");
-              $("#progBar" + index).html(Math.ceil(percentage) + "%");
-            });
+            //Every time piece of data is downloaded, calculate percentage progress
+            const percentage = (data / total) * 100;
+            $("#progBar" + index).width(percentage + "%");
+            $("#progBar" + index).html(Math.ceil(percentage) + "%");
           });
           ffmpeg()
             .input(video)
@@ -154,9 +129,6 @@ const download = (link) => {
             });
         });
     }
-
-    //Push the downloaded into a list of downloads
-    downloads.push(audioStream);
   });
 };
 
@@ -176,7 +148,6 @@ $("#browse").on("click", () => {
 
 $("#dlMassButton").on("click", () => {
   let rawList = $(".massInput").val();
-  $(".massInput").val("");
   let parsedList = rawList.split("\n");
   parsedList.forEach((x) => {
     download(x);
