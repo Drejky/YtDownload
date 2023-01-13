@@ -27,7 +27,7 @@
     "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
-    "electron": "^12.2.3",
+    "electron": "^18.3.7",
     "electron-packager": "^14.2.0"
   }
 }
