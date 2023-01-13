@@ -88,6 +88,10 @@ const download = (link) => {
           console.log("An error occurred: " + err.message);
         })
         .save(path + "/" + name + ".mp3");
+      downloads[index].on("end", () => {
+        $("#toRemove" + index).remove();
+        downloads.splice(index, 1);
+      });
     }
     //Video download
     else {
